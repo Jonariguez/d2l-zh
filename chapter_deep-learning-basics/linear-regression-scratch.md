@@ -18,7 +18,7 @@ import random
 
 $$\boldsymbol{y} = \boldsymbol{X}\boldsymbol{w} + b + \epsilon,$$
 
-其中噪音项$\epsilon$服从均值为0和标准差为0.01的正态分布。下面，让我们生成数据集。
+其中噪音项$\epsilon$服从均值为0和标准差为0.01的正态分布。噪音（noise）代表了数据集中无意义的干扰。下面，让我们生成数据集。
 
 ```{.python .input  n=2}
 num_inputs = 2
@@ -137,7 +137,7 @@ net = linreg
 loss = squared_loss
 
 for epoch in range(num_epochs):  # 训练模型一共需要 num_epochs 个迭代周期。
-    # 在一个迭代周期中，使用训练数据集中所有样本一次（假设样本数能够被批量大小整除）。
+    # 在每一个迭代周期中，会使用训练数据集中所有样本一次（假设样本数能够被批量大小整除）。
     # X 和 y 分别是小批量样本的特征和标签。
     for X, y in data_iter(batch_size, features, labels):
         with autograd.record():
@@ -165,7 +165,7 @@ true_b, b
 
 ## 练习
 
-* 为什么`squared_loss`函数中需要使用`reshape`函数?
+* 为什么`squared_loss`函数中需要使用`reshape`函数？
 * 尝试使用不同的学习率，观察损失函数值的下降快慢。
 * 如果样本个数不能被批量大小整除，`data_iter`函数的行为会有什么变化？
 

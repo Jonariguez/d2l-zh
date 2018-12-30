@@ -1,4 +1,4 @@
-# 多GPU计算的Gluon实现
+# 多GPU计算的简洁实现
 
 在Gluon中，我们可以很方便地使用数据并行进行多GPU计算。例如，我们并不需要自己实现[“多GPU计算”](multiple-gpus.md)一节里介绍的多GPU之间同步数据的辅助函数。
 
@@ -96,7 +96,7 @@ def train(num_gpus, batch_size, lr):
         nd.waitall()
         train_time = time.time() - start
         test_acc = gb.evaluate_accuracy(test_iter, net, ctx[0])
-        print('epoch %d, training time: %.1f sec, test_acc %.2f' % (
+        print('epoch %d, time: %.1f sec, test acc %.2f' % (
             epoch + 1, train_time, test_acc))
 ```
 

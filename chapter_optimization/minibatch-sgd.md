@@ -107,7 +107,7 @@ train_sgd(0.005, 1)
 train_sgd(0.05, 10)
 ```
 
-## Gluon实现
+## 简洁实现
 
 在Gluon里我们可以通过`Trainer`类来调用优化算法。下面实现一个通用的训练函数，它通过优化算法的名字`trainer_name`和超参数`trainer_hyperparams`来创建`Trainer`实例。
 
@@ -165,7 +165,7 @@ train_gluon_ch7('sgd', {'learning_rate': 0.05}, features, labels, 10)
 * 查阅MXNet文档，使用`Trainer`类的`set_learning_rate`函数，令小批量随机梯度下降的学习率每过一个迭代周期减小到原值的1/10。
 
 
-## 扫码直达[讨论区](https://discuss.gluon.ai/t/topic/1877)
+## 扫码直达[讨论区](https://discuss.gluon.ai/t/topic/8013)
 
 ![](../img/qr_minibatch-sgd.svg)
 

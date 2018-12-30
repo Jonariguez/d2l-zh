@@ -1,8 +1,8 @@
 all: html
 
-build/%.ipynb: %.md build/env.yml build/md2ipynb.py $(wildcard gluonbook/*)
+build/%.ipynb: %.md build/env.yml $(wildcard gluonbook/*)
 	@mkdir -p $(@D)
-	cd $(@D); python ../md2ipynb.py ../../$< ../../$@
+	cd $(@D); python ../utils/md2ipynb.py ../../$< ../../$@
 
 build/%.md: %.md
 	@mkdir -p $(@D)
@@ -19,7 +19,7 @@ FRONTPAGE = $(wildcard $(FRONTPAGE_DIR)/*)
 FRONTPAGE_DEP = $(patsubst %, build/%, $(FRONTPAGE))
 
 IMG_NOTEBOOK = $(filter-out $(FRONTPAGE_DIR), $(wildcard img/*))
-ORIGIN_DEPS = $(IMG_NOTEBOOK) $(wildcard data/*) environment.yml README.md
+ORIGIN_DEPS = $(IMG_NOTEBOOK) $(wildcard data/* gluonbook/*) environment.yml README.md
 DEPS = $(patsubst %, build/%, $(ORIGIN_DEPS))
 
 PKG = build/_build/html/d2l-zh.zip
@@ -27,9 +27,9 @@ PKG = build/_build/html/d2l-zh.zip
 pkg: $(PKG)
 
 build/_build/html/d2l-zh.zip: $(OBJ) $(DEPS)
-	cd build; zip -r $(patsubst build/%, %, $@ $(DEPS)) chapter*
+	cd build; zip -r $(patsubst build/%, %, $@ $(DEPS)) chapter*/*md chapter*/*ipynb
 
-# Copy everything to build/.
+# Copy XX to build/XX if build/XX is depended (e.g., $(DEPS))
 build/%: %
 	@mkdir -p $(@D)
 	@cp -r $< $@
@@ -62,10 +62,9 @@ pdf: $(DEPS) $(OBJ) $(PDFIMG)
 	sed -i /\\\\sphinxtablecontinued{Continued\ on\ next\ page}/d $(TEX)
 	sed -i /{\\\\tablename\\\\\ \\\\thetable{}\ --\ continued\ from\ previous\ page}/d $(TEX)
 	cd build/_build/latex && \
-	bash ../../convert_output_svg.sh && \
+	bash ../../utils/convert_output_svg.sh && \
 	buf_size=10000000 xelatex d2l-zh.tex && \
 	buf_size=10000000 xelatex d2l-zh.tex
 
 clean:
 	rm -rf build/chapter* build/_build build/img build/data build/environment.yml build/README.md $(PKG)
-

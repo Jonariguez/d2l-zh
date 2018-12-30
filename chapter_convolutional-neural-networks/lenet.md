@@ -63,7 +63,7 @@ train_iter, test_iter = gb.load_data_fashion_mnist(batch_size=batch_size)
 因为卷积神经网络计算比多层感知机要复杂，建议使用GPU来加速计算。我们尝试在`gpu(0)`上创建NDArray，如果成功则使用`gpu(0)`，否则仍然使用CPU。
 
 ```{.python .input}
-def try_gpu4():  # 本函数已保存在 gluonbook 包中方便以后使用。
+def try_gpu():  # 本函数已保存在 gluonbook 包中方便以后使用。
     try:
         ctx = mx.gpu()
         _ = nd.zeros((1,), ctx=ctx)
@@ -71,11 +71,11 @@ def try_gpu4():  # 本函数已保存在 gluonbook 包中方便以后使用。
         ctx = mx.cpu()
     return ctx
 
-ctx = try_gpu4()
+ctx = try_gpu()
 ctx
 ```
 
-相应地，我们对[“Softmax回归的从零开始实现”](../chapter_deep-learning-basics/softmax-regression-scratch.md)一节中描述的`evaluate_accuracy`函数略作修改。由于数据刚开始存在CPU的内存上，当`ctx`变量为GPU时，我们通过[“GPU计算”](../chapter_deep-learning-computation/use-gpu.md)一节中介绍的`as_in_context`函数将数据复制到GPU上，例如`gpu(0)`。
+相应地，我们对[“Softmax回归的从零开始实现”](../chapter_deep-learning-basics/softmax-regression-scratch.md)一节中描述的`evaluate_accuracy`函数略作修改。由于数据刚开始存在CPU使用的内存上，当`ctx`变量代表GPU及相应的显存时，我们通过[“GPU计算”](../chapter_deep-learning-computation/use-gpu.md)一节中介绍的`as_in_context`函数将数据复制到显存上，例如`gpu(0)`。
 
 ```{.python .input}
 # 本函数已保存在 gluonbook 包中方便以后使用。该函数将被逐步改进：它的完整实现将在“图像增
@@ -83,13 +83,13 @@ ctx
 def evaluate_accuracy(data_iter, net, ctx):
     acc = nd.array([0], ctx=ctx)
     for X, y in data_iter:
-        # 如果 ctx 是 GPU，将数据复制到 GPU 上。
+        # 如果 ctx 代表 GPU 及相应的显存，将数据复制到显存上。
         X, y = X.as_in_context(ctx), y.as_in_context(ctx)
         acc += gb.accuracy(net(X), y)
     return acc.asscalar() / len(data_iter)
 ```
 
-我们同样对[“Softmax回归的从零开始实现”](../chapter_deep-learning-basics/softmax-regression-scratch.md)一节中定义的`train_ch3`函数略作修改，确保计算使用的数据和模型同在CPU或GPU的内存上。
+我们同样对[“Softmax回归的从零开始实现”](../chapter_deep-learning-basics/softmax-regression-scratch.md)一节中定义的`train_ch3`函数略作修改，确保计算使用的数据和模型同在内存或显存上。
 
 ```{.python .input}
 # 本函数已保存在 gluonbook 包中方便以后使用。

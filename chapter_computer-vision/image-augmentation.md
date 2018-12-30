@@ -114,11 +114,11 @@ show_images(gdata.vision.CIFAR10(train=True)[0:32][0], 4, 8, scale=0.8);
 为了在预测时得到确定的结果，我们通常只将图像增广应用在训练样本上，而不在预测时使用含随机操作的图像增广。在这里我们仅仅使用最简单的随机左右翻转。此外，我们使用`ToTensor`实例将小批量图像转成MXNet需要的格式，即形状为（批量大小，通道数，高，宽）、值域在0到1之间且类型为32位浮点数。
 
 ```{.python .input  n=33}
-flip_lr_augs = gdata.vision.transforms.Compose([
+flip_aug = gdata.vision.transforms.Compose([
     gdata.vision.transforms.RandomFlipLeftRight(),
     gdata.vision.transforms.ToTensor()])
 
-no_augs = gdata.vision.transforms.Compose([
+no_aug = gdata.vision.transforms.Compose([
     gdata.vision.transforms.ToTensor()])
 ```
 
@@ -134,7 +134,7 @@ def load_cifar10(is_train, augs, batch_size):
 
 ### 使用多GPU训练模型
 
-我们在CIFAR-10数据集上训练[“残差网络（ResNet）”](../chapter_convolutional-neural-networks/resnet.md)一节介绍的ResNet-18模型。我们还将应用[“多GPU计算的Gluon实现”](../chapter_computational-performance/multiple-gpus-gluon.md)一节中介绍的方法，使用多GPU训练模型。
+我们在CIFAR-10数据集上训练[“残差网络（ResNet）”](../chapter_convolutional-neural-networks/resnet.md)一节介绍的ResNet-18模型。我们还将应用[“多GPU计算的简洁实现”](../chapter_computational-performance/multiple-gpus-gluon.md)一节中介绍的方法，使用多GPU训练模型。
 
 首先，我们定义`try_all_gpus`函数，从而能够获取所有可用的GPU。
 
@@ -231,21 +231,11 @@ def train_with_data_aug(train_augs, test_augs, lr=0.001):
     train(train_iter, test_iter, net, loss, trainer, ctx, num_epochs=10)
 ```
 
-### 有关图像增广的对比实验
-
-我们先观察使用了图像增广的结果。
+下面使用随机左右翻转的图像增广来训练模型。
 
 ```{.python .input  n=39}
-train_with_data_aug(flip_lr_augs, no_augs)
+train_with_data_aug(flip_aug, no_aug)
 ```
-
-作为对比，下面我们尝试不使用图像增广。
-
-```{.python .input  n=40}
-train_with_data_aug(no_augs, no_augs)
-```
-
-可以看到，即使添加了简单的随机翻转也可能对训练产生一定的影响。图像增广通常会使训练准确率变低，但有可能提高测试准确率。它可以用来应对过拟合。
 
 ## 小结
 
@@ -255,6 +245,7 @@ train_with_data_aug(no_augs, no_augs)
 
 ## 练习
 
+* 不使用图像增广训练模型：`train_with_data_aug(no_aug, no_aug)`。比较有无图像增广时的训练和测试准确率。该对比实验是否能支持图像增广可以应对过拟合这一论断？为什么？
 * 在基于CIFAR-10数据集的模型训练中增加不同的图像增广方法。观察实现结果。
 * 查阅MXNet文档，Gluon的`transforms`模块还提供了哪些图像增广方法？
 

@@ -115,10 +115,10 @@ def get_net():
 $$\sqrt{\frac{1}{n}\sum_{i=1}^n\left(\log(y_i)-\log(\hat y_i)\right)^2}.$$
 
 ```{.python .input  n=11}
-def log_rmse(net, train_features, train_labels):
+def log_rmse(net, features, labels):
     # 将小于 1 的值设成 1，使得取对数时数值更稳定。
-    clipped_preds = nd.clip(net(train_features), 1, float('inf'))
-    rmse = nd.sqrt(2 * loss(clipped_preds.log(), train_labels.log()).mean())
+    clipped_preds = nd.clip(net(features), 1, float('inf'))
+    rmse = nd.sqrt(2 * loss(clipped_preds.log(), labels.log()).mean())
     return rmse.asscalar()
 ```
 
@@ -177,7 +177,7 @@ def k_fold(k, X_train, y_train, num_epochs,
         data = get_k_fold_data(k, i, X_train, y_train)
         net = get_net()
         train_ls, valid_ls = train(net, *data, num_epochs, learning_rate,
-                                  weight_decay, batch_size)
+                                   weight_decay, batch_size)
         train_l_sum += train_ls[-1]
         valid_l_sum += valid_ls[-1]
         if i == 0:
@@ -195,9 +195,8 @@ def k_fold(k, X_train, y_train, num_epochs,
 
 ```{.python .input  n=16}
 k, num_epochs, lr, weight_decay, batch_size = 5, 100, 5, 0, 64
-verbose_epoch = num_epochs - 2
 train_l, valid_l = k_fold(k, train_features, train_labels, num_epochs, lr,
-                         weight_decay, batch_size)
+                          weight_decay, batch_size)
 print('%d-fold validation: avg train rmse: %f, avg valid rmse: %f'
       % (k, train_l, valid_l))
 ```
@@ -244,7 +243,7 @@ train_and_pred(train_features, test_features, train_labels, test_data,
 
 * 在Kaggle提交本教程的预测结果。观察一下，这个结果在Kaggle上能拿到什么样的分数？
 * 对照$K$折交叉验证结果，不断修改模型（例如添加隐藏层）和调参，你能提高Kaggle上的分数吗？
-* 如果不使用本节中对连续数值特征的标准化处理，结果会有什么变化?
+* 如果不使用本节中对连续数值特征的标准化处理，结果会有什么变化？
 * 扫码直达讨论区，在社区交流方法和结果。你能发掘出其他更好的技巧吗？
 
 ## 扫码直达[讨论区](https://discuss.gluon.ai/t/topic/1039)
