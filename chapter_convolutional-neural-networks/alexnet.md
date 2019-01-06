@@ -40,7 +40,7 @@ AlexNet与LeNet的设计理念非常相似，但也有显著的区别。
 
 第一，与相对较小的LeNet相比，AlexNet包含8层变换，其中有五层卷积和两层全连接隐含层，以及一个全连接输出层。下面我们来详细描述这些层的设计。
 
-AlexNet第一层中的卷积窗口形状是$11\times11$。因为ImageNet中绝大多数图像的高和宽均比MNIST图像的高和宽大十倍以上，ImageNet图像的物体占用更多的像素，所以需要更大的卷积窗口来捕获物体。第二层中的卷积窗口形状减小到$5\times5$，之后全采用$3\times3$。此外，第一、第二和第五个卷积层之后都使用了窗口形状为$3\times3$、步幅为2的最大池化层。而且，AlexNet使用的卷积通道数也数十倍大于LeNet中的卷积通道数。
+AlexNet第一层中的卷积窗口形状是$11\times11$。因为ImageNet中绝大多数图像的高和宽均比MNIST图像的高和宽大十倍以上，ImageNet图像的物体占用更多的像素，所以需要更大的卷积窗口来捕获物体。第二层中的卷积窗口形状减小到$5\times5$，之后全采用$3\times3$。此外，第一、第二和第五个卷积层之后都使用了窗口形状为$3\times3$、步幅为2的最大池化层。而且，AlexNet使用的卷积通道数也数十倍于LeNet中的卷积通道数。
 
 紧接着最后一个卷积层的是两个输出个数为4096的全连接层。这两个巨大的全连接层带来将近1GB的模型参数。由于早期显存的限制，最早的AlexNet使用双数据流的设计使得一个GPU只需要处理一半模型。幸运的是显存在过去几年得到了长足的发展，通常我们不再需要这样的特别设计了。
 
@@ -53,7 +53,7 @@ AlexNet第一层中的卷积窗口形状是$11\times11$。因为ImageNet中绝�
 下面我们实现稍微简化过的AlexNet。
 
 ```{.python .input  n=1}
-import gluonbook as gb
+import d2lzh as d2l
 from mxnet import gluon, init, nd
 from mxnet.gluon import data as gdata, nn
 import os
@@ -95,7 +95,7 @@ for layer in net:
 虽然论文中AlexNet使用ImageNet数据，但因为ImageNet数据训练时间较长，我们仍用前面的Fashion-MNIST数据集来演示AlexNet。读取数据的时候我们额外做了一步将图像高和宽扩大到AlexNet使用的图像高和宽224。这个可以通过`Resize`类来实现。也就是说，我们在`ToTensor`类前使用`Resize`类，然后使用`Compose`类来将这两个变化串联以方便调用。
 
 ```{.python .input  n=3}
-# 本函数已保存在 gluonbook 包中方便以后使用。
+# 本函数已保存在 d2lzh 包中方便以后使用。
 def load_data_fashion_mnist(batch_size, resize=None, root=os.path.join(
         '~', '.mxnet', 'datasets', 'fashion-mnist')):
     root = os.path.expanduser(root)  # 展开用户路径 '~'。
@@ -125,10 +125,10 @@ train_iter, test_iter = load_data_fashion_mnist(batch_size, resize=224)
 这时候我们可以开始训练AlexNet了。相对于上节的LeNet，这里的主要改动是使用了更小的学习率。
 
 ```{.python .input  n=5}
-lr, num_epochs, ctx = 0.01, 5, gb.try_gpu()
+lr, num_epochs, ctx = 0.01, 5, d2l.try_gpu()
 net.initialize(force_reinit=True, ctx=ctx, init=init.Xavier())
 trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': lr})
-gb.train_ch5(net, train_iter, test_iter, batch_size, trainer, ctx, num_epochs)
+d2l.train_ch5(net, train_iter, test_iter, batch_size, trainer, ctx, num_epochs)
 ```
 
 ## 小结

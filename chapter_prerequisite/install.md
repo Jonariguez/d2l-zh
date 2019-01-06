@@ -14,7 +14,7 @@
 
 第二步：下载包含本书全部代码的压缩包。我们可以在浏览器的地址栏中输入以下地址并按回车键进行下载：
 
-> https://zh.diveintodeeplearning.org/d2l-zh-1.0.zip
+> https://zh.d2l.ai/d2l-zh-1.0.zip
 
 下载完成后，创建文件夹“d2l-zh”并将以上压缩包解压到这个文件夹。在该目录文件资源管理器的地址栏输入`cmd`进入命令行模式。
 
@@ -28,7 +28,7 @@ conda config --prepend channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pk
 conda config --prepend channels http://mirrors.ustc.edu.cn/anaconda/pkgs/free/
 ```
 
-接下来使用conda创建虚拟（运行）环境并安装本书需要的软件。这里`environment.yml`是放置在代码压缩包中的文件。使用文本编辑器打开该文件，即可查看运行压缩包中本书代码所依赖的软件（如MXNet和`gluonbook`包）及版本号。
+接下来使用conda创建虚拟（运行）环境并安装本书需要的软件。这里`environment.yml`是放置在代码压缩包中的文件。使用文本编辑器打开该文件，即可查看运行压缩包中本书代码所依赖的软件（如MXNet和`d2lzh`包）及版本号。
 
 ```
 conda env create -f environment.yml
@@ -80,7 +80,7 @@ to PATH in your /home/your_name/your_file ? [yes|no]
 
 ```
 mkdir d2l-zh && cd d2l-zh
-curl https://zh.diveintodeeplearning.org/d2l-zh-1.0.zip -o d2l-zh.zip
+curl https://zh.d2l.ai/d2l-zh-1.0.zip -o d2l-zh.zip
 unzip d2l-zh.zip && rm d2l-zh.zip
 ```
 
@@ -98,7 +98,7 @@ source activate gluon
 
 第一步，重新下载最新的包含本书全部代码的压缩包。下载地址：
 
-* https://zh.diveintodeeplearning.org/d2l-zh.zip
+* https://zh.d2l.ai/d2l-zh.zip
 
 解压后进入文件夹“d2l-zh”。
 
